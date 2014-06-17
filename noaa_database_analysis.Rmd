@@ -5,5 +5,80 @@
 
 ## Data Processing
 
+### Load libraries 
+
+```{r}
+
+library(stringr)
+library(dplyr)
+
+```
+
+
+### Load data into R
+
+```{r }
+
+storms_df <- read.csv('repdata_data_StormData.csv.bz2', na.strings = c('NA', ''),
+                      stringsAsFactors = FALSE)
+
+```
+
+### Examine raw data
+
+```{r}
+
+dim(storms_df)
+
+sum(complete.cases(storms_df))
+
+names(storms_df)
+
+str(storms_df)
+
+```
+
+
+We take a close look at the `EVTYPE` variable which is extremely important for answering both questions addressed in this report. 
+
+```{r}
+
+unique_raw_events <- length(unique(storms_df$EVTYPE))
+unique_raw_events
+
+table(storms_df$EVTYPE, useNA = "ifany")
+
+```
+
+
+### Pre-process data
+
+First, we begin with a simple pre-processing step by converting all entries in the `EVTYPE` column to lower case and by removing leading and trailing white spaces 
+
+```{r}
+
+storms_df$EVTYPE <- tolower(storms_df$EVTYPE)
+
+length(unique(storms_df$EVTYPE))
+
+storms_df$EVTYPE <- str_trim(storms_df$EVTYPE)
+
+paste0("Total number of unique event types after first two pre-processing steps: " length(unique(storms_df$EVTYPE).
+
+```
+
+The number of unique event types is still too big compared with the 48 values described in the National Weather Service Storm Data Documentation (page 6)
+
+
+```{r}
+
+```
+
+
+
 
 ## Results
+
+Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+Across the United States, which types of events have the greatest economic consequences?
