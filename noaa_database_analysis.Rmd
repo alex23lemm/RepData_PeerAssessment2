@@ -3,28 +3,29 @@
 ## Synopsis
 
 
-## Data Processing
+## Pre-processing
 
-### Load libraries 
+### Loading libraries 
 
-```{r}
+```{r message=FALSE}
 
 library(stringr)
 library(dplyr)
+library(ggplot2)
 
 ```
 
 
 ### Load data into R
 
-```{r }
+```{r cache=TRUE}
 
 storms_df <- read.csv('repdata_data_StormData.csv.bz2', na.strings = c('NA', ''),
                       stringsAsFactors = FALSE)
 
 ```
 
-### Examine raw data
+### Examining raw data
 
 ```{r}
 
@@ -50,31 +51,95 @@ table(storms_df$EVTYPE, useNA = "ifany")
 
 ```
 
+Although the official storm data documentation lists 48 storm events (page 6), our dataset includes `r unique_raw_events` different event types. 
 
-### Pre-process data
+An examination of the table above reveals that the reason for that huge difference in event types is caused by using different wording for the same kind of events in the raw data. 
 
-First, we begin with a simple pre-processing step by converting all entries in the `EVTYPE` column to lower case and by removing leading and trailing white spaces 
+For instance, you can find 83 variations for the official event type term _Thunderstorm Wind_ caused by:
+
+1. Modifications of the official event type name (e.g., THUNDERSTORM  WINDS or THUNDERSTORM) 
+
+2. Typos (e.g., THUDERSTORM WINDS or THUNDERSTORM WINS)
+
+However, 82563 observations tagged with the official term _Thunderstorm Wind_  are included in the dataset whereas most of the event name modifications just include a single observation.
+
+This shows that in the majority of the cases the event reporters used the official event type names.
+
+### Event type number reduction strategy
+
+In order to reduce the number of event types to a fair amount, we use a simple quantitative approach consisting of 4 steps:
+
+1. We convert the `EVTYPE` column to lower case and remove leading and trailing white spaces 
+
+2. For each of the remaining unique event types we calculate how much it contributes to the overall compeleteness of the number of observations
+
+3. We decide on a threshold and select those event types which contribute the most to the overall amount of observations
+
+4. The remaining set is further reduced by merging similar storms events with different wording  
+
+#### Step 1: Removing leading and trailing which spaces
 
 ```{r}
 
 storms_df$EVTYPE <- tolower(storms_df$EVTYPE)
 
-length(unique(storms_df$EVTYPE))
-
 storms_df$EVTYPE <- str_trim(storms_df$EVTYPE)
 
-paste0("Total number of unique event types after first two pre-processing steps: " length(unique(storms_df$EVTYPE).
+paste0("Total number of unique event types after first pre-processing step: ",
+       length(unique(storms_df$EVTYPE)))
 
 ```
 
-The number of unique event types is still too big compared with the 48 values described in the National Weather Service Storm Data Documentation (page 6)
 
+#### Step 2: Calculating the percentage that each event type contributes to the total amount of observations
 
 ```{r}
 
+storms_by_evtype_df <- group_by(storms_df, EVTYPE) %>%
+  summarize(
+    numb_of_occ = n()
+    ) %>%
+  mutate(
+    contrib_in_percent = round(numb_of_occ / nrow(storms_df), digits = 7),
+    cumb_contrib_in_percent = round(
+      order_by(desc(numb_of_occ), cumsum(contrib_in_percent)), digits = 7
+      )
+    ) %>%
+  arrange(desc(numb_of_occ))
+
+print.data.frame(storms_by_evtype_df[1:50, ])
+
+
+```
+
+As the table above shows, the first 46 event types already make up for 99 % of the total amount of observations. 
+
+This can be shown even better when plotting the grouped data.
+
+
+```{r cumulativeContributionFunction}
+
+storms_by_evtype_df$rank <- 1:nrow(storms_by_evtype_df)
+
+ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) + 
+  geom_line(color = 'steelblue') + 
+  xlab('Number of included event types (ordered by descending percentage contribution)') +
+  ylab('Observation completeness (in %)') +
+  ggtitle('Cumulative observation completeness') + 
+  theme_bw() +
+  scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
+
 ```
 
 
+
+
+#### Step 3: Choosing the event types which contribute the most to the amount of observations
+
+
+
+
+### Processing data
 
 
 ## Results
