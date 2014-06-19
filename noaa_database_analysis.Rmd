@@ -35,8 +35,6 @@ sum(complete.cases(storms_df))
 
 names(storms_df)
 
-str(storms_df)
-
 ```
 
 
@@ -98,7 +96,13 @@ paste0("Total number of unique event types after first pre-processing step: ",
 ```
 
 
-#### Step 2: Calculating the cumulative percentage that each event type contributes to the total amount of observations
+#### Step 2: Calculating the percentage / cumulative percentage that each event type contributes to the total amount of observations
+
+* We will group the dataset by event type and calculate the the total number of observations which belong to each event type. 
+
+* After that we will calculate the __percentage__ each event type contributes to the overall amount of the observations.
+
+* In addition, we will calculate the __cumulative percentage__ for each event type and sort the rows by the number of observations in descending order. 
 
 ```{r}
 
@@ -142,6 +146,16 @@ Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_
 
 
 #### Step 3: Choosing the event types which contribute the most to the amount of observations
+
+We decide to include the  69 event types which contribute the most to the overall amount of observations. Those 65 event types make up for 99,5 % of the total amount of observations. 
+
+This is equivalent to include all event types which contribute more than 100 observations to the dataset.
+
+```{r}
+
+print.data.frame(filter(storms_by_evtype_df, rank == 69))
+
+```
 
 
 
