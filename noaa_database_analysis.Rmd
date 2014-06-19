@@ -47,7 +47,12 @@ We take a close look at the `EVTYPE` variable which is extremely important for a
 unique_raw_events <- length(unique(storms_df$EVTYPE))
 unique_raw_events
 
-table(storms_df$EVTYPE, useNA = "ifany")
+```
+
+
+```{r}
+
+table(storms_df$EVTYPE, useNA = "ifany")[666:747]
 
 ```
 
@@ -91,7 +96,7 @@ paste0("Total number of unique event types after first pre-processing step: ",
 ```
 
 
-#### Step 2: Calculating the percentage that each event type contributes to the total amount of observations
+#### Step 2: Calculating the cumulative percentage that each event type contributes to the total amount of observations
 
 ```{r}
 
@@ -131,7 +136,7 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
 
 ```
 
-
+Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the obervations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. 
 
 
 #### Step 3: Choosing the event types which contribute the most to the amount of observations
