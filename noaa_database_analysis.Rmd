@@ -56,7 +56,7 @@ An examination of the data reveals that the reason for that huge difference in e
 
 For instance, you can find more than 80 variations for the official event type term _Thunderstorm Wind_:
 
-```{r results='asis'}
+```{r }
 
 as.data.frame(table(storms_df$EVTYPE, useNA = "ifany"))[666:747,]
 
