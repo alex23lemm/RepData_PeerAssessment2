@@ -12,6 +12,7 @@
 library(stringr)
 library(dplyr)
 library(ggplot2)
+library(xtable)
 
 ```
 
@@ -118,10 +119,16 @@ storms_by_evtype_df <- group_by(storms_df, EVTYPE) %>%
     ) %>%
   arrange(desc(numb_of_occ))
 
-print.data.frame(storms_by_evtype_df[1:50, ])
+```
 
+```{r results='asis'}
+
+print(xtable(storms_by_evtype_df[1:50, ], 
+             caption = "The 46 event types with the highest obervation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 ```
+<br>
+
 
 As the table above shows, the first 46 event types already make up for 99 % of the total amount of observations. 
 
@@ -147,17 +154,17 @@ Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_
 
 #### Step 3: Choosing the event types which contribute the most to the amount of observations
 
-We decide to include the  69 event types which contribute the most to the overall amount of observations. Those 65 event types make up for 99,5 % of the total amount of observations. 
+We decide to include the  69 event types which contribute the most to the overall amount of observations. Those 69 event types make up for 99,5 % of the total amount of observations as you can see in the `cumb_contrib_in_percent` column below.
 
-This is equivalent to include all event types which contribute more than 100 observations to the dataset.
+```{r results='asis'}
 
-```{r}
-
-print.data.frame(filter(storms_by_evtype_df, rank == 69))
+print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html', 
+      include.rownames = FALSE)
 
 ```
+<br>
 
-
+This is equivalent to include all event types which contribute more than 100 observations to the dataset.
 
 
 ### Processing data
