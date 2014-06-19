@@ -50,17 +50,19 @@ unique_raw_events
 ```
 
 
-```{r}
+Although the official storm data documentation lists 48 storm events (page 6), our dataset includes `r unique_raw_events` different event types. 
 
-table(storms_df$EVTYPE, useNA = "ifany")[666:747]
+An examination of the data reveals that the reason for that huge difference in event types is caused by using different wording for the same kind of events in the raw data. 
+
+For instance, you can find more than 80 variations for the official event type term _Thunderstorm Wind_:
+
+```{r results='asis'}
+
+as.data.frame(table(storms_df$EVTYPE, useNA = "ifany"))[666:747,]
 
 ```
 
-Although the official storm data documentation lists 48 storm events (page 6), our dataset includes `r unique_raw_events` different event types. 
-
-An examination of the table above reveals that the reason for that huge difference in event types is caused by using different wording for the same kind of events in the raw data. 
-
-For instance, you can find 83 variations for the official event type term _Thunderstorm Wind_ caused by:
+This is caused by:
 
 1. Modifications of the official event type name (e.g., THUNDERSTORM  WINDS or THUNDERSTORM) 
 
@@ -68,7 +70,7 @@ For instance, you can find 83 variations for the official event type term _Thund
 
 However, 82563 observations tagged with the official term _Thunderstorm Wind_  are included in the dataset whereas most of the event name modifications just include a single observation.
 
-This shows that in the majority of the cases the event reporters used the official event type names.
+This shows that in the majority of the cases the event reporters used the official event type name.
 
 ### Event type number reduction strategy
 
