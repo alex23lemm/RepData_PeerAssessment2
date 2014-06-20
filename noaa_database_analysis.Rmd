@@ -3,7 +3,7 @@
 ## Synopsis
 
 
-## Pre-processing
+## Data Processing
 
 ### Loading libraries 
 
@@ -17,7 +17,7 @@ library(xtable)
 ```
 
 
-### Load data into R
+### Loading data into R
 
 ```{r cache=TRUE}
 
@@ -35,6 +35,8 @@ dim(storms_df)
 sum(complete.cases(storms_df))
 
 names(storms_df)
+
+str(storms_df)
 
 ```
 
@@ -73,15 +75,17 @@ This shows that in the majority of the cases the event reporters used the offici
 
 ### Event type number reduction strategy
 
-In order to reduce the number of event types to a fair amount, we use a simple quantitative approach consisting of 4 steps:
+In order to reduce the number of event types to a fair amount, we use a simple quantitative approach consisting of 5 steps:
 
 1. We convert the `EVTYPE` column to lower case and remove leading and trailing white spaces 
 
-2. For each of the remaining unique event types we calculate how much it contributes to the overall compeleteness of the number of observations
+2. For each of the remaining unique event types we calculate how much it contributes to the overall completeness of the number of observations
 
 3. We decide on a threshold and select those event types which contribute the most to the overall amount of observations
 
-4. The remaining set is further reduced by merging similar storms events with different wording  
+4. We filter the loaded raw data according to chosen event types
+
+5. The remaining set is further reduced by merging similar storm events with different wording  
 
 #### Step 1: Removing leading and trailing which spaces
 
@@ -99,7 +103,7 @@ paste0("Total number of unique event types after first pre-processing step: ",
 
 #### Step 2: Calculating the percentage / cumulative percentage that each event type contributes to the total amount of observations
 
-* We will group the dataset by event type and calculate the the total number of observations which belong to each event type. 
+* We will group the dataset by event type and calculate the total number of observations which belong to each event type. 
 
 * After that we will calculate the __percentage__ each event type contributes to the overall amount of the observations.
 
@@ -111,33 +115,33 @@ storms_by_evtype_df <- group_by(storms_df, EVTYPE) %>%
   summarize(
     numb_of_occ = n()
     ) %>%
+  arrange(desc(numb_of_occ)) %>%
   mutate(
     contrib_in_percent = round(numb_of_occ / nrow(storms_df), digits = 7),
     cumb_contrib_in_percent = round(
       order_by(desc(numb_of_occ), cumsum(contrib_in_percent)), digits = 7
       )
-    ) %>%
-  arrange(desc(numb_of_occ))
+    ) 
+
+storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 
 ```
 
 ```{r results='asis'}
 
-print(xtable(storms_by_evtype_df[1:50, ], 
-             caption = "The 46 event types with the highest obervation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
+print(xtable(storms_by_evtype_df[1:47, ], 
+             caption = "The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 ```
 <br>
 
 
-As the table above shows, the first 46 event types already make up for 99 % of the total amount of observations. 
+As the table above shows, the first 47 event types already make up for 99 % of the total amount of observations. 
 
 This can be shown even better when plotting the grouped data.
 
-
+<figure>
 ```{r cumulativeContributionFunction}
-
-storms_by_evtype_df$rank <- 1:nrow(storms_by_evtype_df)
 
 ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) + 
   geom_line(color = 'steelblue') + 
@@ -148,8 +152,9 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
   scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
 
 ```
+<figcaption>__Figure 1:__ Last test of the day</figcaption></figure>
 
-Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the obervations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. 
+Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. 
 
 
 #### Step 3: Choosing the event types which contribute the most to the amount of observations
@@ -166,8 +171,62 @@ print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html'
 
 This is equivalent to include all event types which contribute more than 100 observations to the dataset.
 
+```{r}
 
-### Processing data
+storms_by_evtype_df <- filter(storms_by_evtype_df, numb_of_occ > 100)
+
+selected_evtypes <- storms_by_evtype_df$EVTYPE
+
+```
+
+
+#### Step 4: Filter the loaded raw data according to chosen event types 
+
+
+From the raw data we just select those observations which belong to one of the derived event types. 
+
+```{r}
+
+original_row_numbers <- nrow(storms_df)
+
+storms_df <- filter(storms_df, EVTYPE %in% selected_evtypes)
+
+new_row_numbers <- nrow(storms_df)
+
+paste0('The reduced dataset includes ', round(new_row_numbers/original_row_numbers, 
+                                              digits = 3) * 100, 
+       ' % of the original observation amount, exactly as decided by our threshold choice in Step 3.')
+
+```
+
+#### Step 5: Merge similar event types
+
+After that we merge similar event types with different wording to reduce the amount of unique event type names even further.
+
+```{r}
+
+storms_df$EVTYPE <- gsub('extreme windchill|extreme cold$', 
+                                   'extreme cold/wind chill',
+                                   storms_df$EVTYPE)
+storms_df$EVTYPE[storms_df$EVTYPE == 'marine tstm wind'] <- 'marine thunderstorm wind'
+storms_df$EVTYPE <- gsub('thunderstorm winds|^tstm wind$|tstm wind/hail', 
+                                   'thunderstorm wind',
+                                   storms_df$EVTYPE)
+storms_df$EVTYPE <- gsub('flood/flash flood|flash flooding',
+                                   'flash flood',
+                                   storms_df$EVTYPE)
+storms_df$EVTYPE[storms_df$EVTYPE == 'storm surge'] <-  'storm surge/tide'
+storms_df$EVTYPE[storms_df$EVTYPE == 'flooding'] <-  'flood'
+storms_df$EVTYPE[storms_df$EVTYPE == 'heavy surf/high surf'] <- 'high surf'                                  
+storms_df$EVTYPE[storms_df$EVTYPE == 'high winds'] <-  'high wind'
+storms_df$EVTYPE[storms_df$EVTYPE == 'winter weather/mix'] <- 'winter weather'
+
+paste0("Total number of unique event types after last pre-processing step: ",
+       length(unique(storms_df$EVTYPE)))
+
+```
+
+
 
 
 ## Results
