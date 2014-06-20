@@ -36,8 +36,6 @@ sum(complete.cases(storms_df))
 
 names(storms_df)
 
-str(storms_df)
-
 ```
 
 
@@ -51,17 +49,26 @@ unique_raw_events
 ```
 
 
-Although the official storm data documentation lists 48 storm events (page 6), our dataset includes `r unique_raw_events` different event types. 
+Although the official storm data documentation on the course assessment page lists 48 storm events (page 6), our dataset includes `r unique_raw_events` different event types. 
 
 An examination of the data reveals that the reason for that huge difference in event types is caused by using different wording for the same kind of events in the raw data. 
 
 For instance, you can find more than 80 variations for the official event type term _Thunderstorm Wind_:
 
-```{r }
+```{r results='asis'}
 
-as.data.frame(table(storms_df$EVTYPE, useNA = "ifany"))[666:747,]
+tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
+  summarize(
+    number_of_obs = n()
+    ) %>% 
+  arrange(EVTYPE)
+
+print(xtable(tstm_subset_df[743:823, ], 
+             caption = "Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
+
 
 ```
+<br>
 
 This is caused by:
 
@@ -145,16 +152,14 @@ This can be shown even better when plotting the grouped data.
 
 ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) + 
   geom_line(color = 'steelblue') + 
-  xlab('Number of included event types (ordered by descending percentage contribution)') +
+  xlab('Unique event types (ordered by descending percentage contribution)') +
   ylab('Observation completeness (in %)') +
   ggtitle('Cumulative observation completeness') + 
   theme_bw() +
   scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
 
 ```
-<figcaption>__Figure 1:__ Last test of the day</figcaption></figure>
-
-Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. 
+<figcaption>__Figure 1: Percentage contribution of each event type to total amount of observations.__ Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. </figcaption></figure>
 
 
 #### Step 3: Choosing the event types which contribute the most to the amount of observations
