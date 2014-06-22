@@ -413,7 +413,26 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
 ```
 <figcaption><b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</figcaption></figure>
 
-The general pattern which the smoother highlights in the time series plot above, can in parts be explained with the progression of available observations per year:
+The general pattern which the smoother highlights in the time series plot above, can partly explained with the progression of available observations per year:
+
+<figure>
+```{r}
+
+obs_by_year_df <- group_by(storms_df, year) %>%
+  summarize(
+    numb_of_obs = n()
+    )
+
+ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
+  geom_line(colour = 'steelblue') + 
+  xlab('Year') +
+  ylab('Number of observations') +
+  ggtitle('Number of observations in dataset per year') +
+  theme_bw()
+
+
+```
+<figcaption><b>Figure 6: </b>There was a slight increase of reported observations pear year till 1988 (7252 obs). 1989 (10410) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 62134 observations. </figcaption></figure>
 
 
 
