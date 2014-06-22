@@ -1,4 +1,4 @@
-# Upcoming title
+# Upcoming title (comming soon)
 
 ## Synopsis
 
@@ -122,13 +122,13 @@ storms_by_evtype_df <- group_by(storms_df, EVTYPE) %>%
   summarize(
     numb_of_occ = n()
     ) %>%
-  arrange(desc(numb_of_occ)) %>%
   mutate(
     contrib_in_percent = round(numb_of_occ / nrow(storms_df), digits = 7),
     cumb_contrib_in_percent = round(
       order_by(desc(numb_of_occ), cumsum(contrib_in_percent)), digits = 7
       )
-    ) 
+    ) %>%
+  arrange(desc(numb_of_occ))
 
 storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 
@@ -147,11 +147,20 @@ As the table above shows, the first 47 event types already make up for 99 % of t
 
 This can be shown even better when plotting the grouped data.
 
+```{r}
+# Add dummy row at position (0,0) for plotting purposes
+storms_by_evtype_df <- rbind(storms_by_evtype_df, c(0, 0, 0, 0, 0)) %>%
+  arrange(cumb_contrib_in_percent)
+
+```
+
+
 <figure>
 ```{r cumulativeContributionFunction}
 
 ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) + 
   geom_line(color = 'steelblue') + 
+  geom_vline(xintercept = 69) +
   xlab('Unique event types (ordered by descending percentage contribution)') +
   ylab('Observation completeness (in %)') +
   ggtitle('Cumulative observation completeness') + 
@@ -159,12 +168,18 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
   scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
 
 ```
-<figcaption>__Figure 1: Percentage contribution of each event type to total amount of observations.__ Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. </figcaption></figure>
+<figcaption>__Figure 1: Percentage contribution of each event type to total amount of observations.__ The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. </figcaption></figure>
+
+```{r}
+# Remove dummy row
+storms_by_evtype_df <- storms_by_evtype_df[-1, ]
+
+```
 
 
 #### Step 3: Choosing the event types which contribute the most to the amount of observations
 
-We decide to include the  69 event types which contribute the most to the overall amount of observations. Those 69 event types make up for 99,5 % of the total amount of observations as you can see in the `cumb_contrib_in_percent` column below.
+We decide to include the  first 69 ordered event types which account for 99,5 % of the total amount of observations as you can see in the `cumb_contrib_in_percent` column below.
 
 ```{r results='asis'}
 
