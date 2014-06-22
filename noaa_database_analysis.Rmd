@@ -64,7 +64,7 @@ tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
   arrange(EVTYPE)
 
 print(xtable(tstm_subset_df[743:823, ], 
-             caption = "Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
+             caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
 
 
 ```
@@ -137,7 +137,7 @@ storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 ```{r results='asis'}
 
 print(xtable(storms_by_evtype_df[1:47, ], 
-             caption = "The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
+             caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 ```
 <br>
@@ -271,7 +271,7 @@ river flood               tsunami
 urban flood               volcanic ash
 wind
 
-Table:  Differences in event type names between original documentation and processed data
+Table:  <b>Table 3:</b> Differences in event type names between original documentation and processed data
 
 
 
