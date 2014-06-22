@@ -236,15 +236,42 @@ storms_df$EVTYPE <- gsub('flood/flash flood|flash flooding',
                                    'flash flood',
                                    storms_df$EVTYPE)
 storms_df$EVTYPE[storms_df$EVTYPE == 'storm surge'] <-  'storm surge/tide'
+storms_df$EVTYPE[storms_df$EVTYPE == 'hurricane'] <-  'hurricane (typhoon)'
 storms_df$EVTYPE[storms_df$EVTYPE == 'flooding'] <-  'flood'
 storms_df$EVTYPE[storms_df$EVTYPE == 'heavy surf/high surf'] <- 'high surf'                                  
 storms_df$EVTYPE[storms_df$EVTYPE == 'high winds'] <-  'high wind'
 storms_df$EVTYPE[storms_df$EVTYPE == 'winter weather/mix'] <- 'winter weather'
+storms_df$EVTYPE[storms_df$EVTYPE == 'rip currents'] <- 'rip current'
+storms_df$EVTYPE[storms_df$EVTYPE == 'strong winds'] <- 'strong wind'
+storms_df$EVTYPE[storms_df$EVTYPE == 'coastal flooding']  <- 'coastal flood'
+storms_df$EVTYPE[storms_df$EVTYPE == 'wild/forest fire']  <- 'wildfire'
+storms_df$EVTYPE[storms_df$EVTYPE == 'moderate snowfall']  <- 'moderate snow'
+storms_df$EVTYPE[storms_df$EVTYPE == 'urban/sml stream fld']  <- 'urban flood'
+storms_df$EVTYPE[storms_df$EVTYPE == 'unseasonably warm']  <- 'excessive heat'
+storms_df$EVTYPE[storms_df$EVTYPE == 'record warmth']  <- 'excessive heat'
 
 paste0("Total number of unique event types after last pre-processing step: ",
        length(unique(storms_df$EVTYPE)))
 
 ```
+
+By applying our event type reduction strategy, we were able to reduce the number of event types from `r unique_raw_events` to `r length(unique(storms_df$EVTYPE))`. In the process we omitted 0.05 % of the observations from the original raw data. However, slight differences remain when you compare the unique event type names in our processed dataset with the official ones described in the storms data documentation on page 6:
+      
+Additional event types    Missing event types
+------------------------  ---------------------
+astronomical high tide    debris flow
+dry microburst            dense smoke
+fog                       freezing fog
+freezing rain             lakeshore flood
+landslide                 marine strong wind
+light snow                seiche
+moderate snow             sleet
+snow                      tropcial depression
+river flood               tsunami
+urban flood               volcanic ash
+wind
+
+Table:  Differences in event type names between original documentation and processed data
 
 
 
