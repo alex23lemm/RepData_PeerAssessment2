@@ -350,8 +350,6 @@ with(storms_df, {
 <figcaption>__Figure 2: Distribution of injuries and fatalities__ __(a)__ Injuries are right skewed
 __(b)__ Fatalities are right skewed. In the majority of the reported storm events either 0 or a tiny number of people were injured or killed</figcaption></figure>
 
-
-
 We take a look at the total amount of persons injured or killed by event type:
 
 <figure>
@@ -391,12 +389,13 @@ ggplot(inj_fat_by_evtype_df, aes(evtype, fatalities)) +
 
 Next, we examine how the numbers of people injured / people killed did change over time:
 
-```{r}
+<figure>
+```{r inj_fat_time_series, message=FALSE}
 
 inj_fat_by_year_df <- group_by(storms_df, year) %>%
   summarize(
-    injuries = sum(injuries),
-    fatalities = sum(fatalities)
+    Injuries = sum(injuries),
+    Fatalities = sum(fatalities)
     )
 
 inj_fat_by_year_df <- melt(inj_fat_by_year_df, id = 'year', variable = 'Outcome')
@@ -406,12 +405,18 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
   geom_smooth() +
   xlab('Number of people affected by storm events') +
   ylab('Year') +
-  ggtitle('') +
+  ggtitle('People injured/killed in the United States by storm events over time') +
   theme_bw() +
   facet_wrap(~ Outcome, scales = 'free_y') 
 
 
 ```
+<figcaption><b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</figcaption></figure>
+
+The general pattern which the smoother highlights in the time series plot above, can in parts be explained with the progression of available observations per year:
+
+
+
 
 
 ### Storm events in the United States having the greated economic consequences
