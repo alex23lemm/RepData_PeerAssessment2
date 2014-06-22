@@ -1,9 +1,13 @@
-# Storm events have minor impact on population health (comming soon)
+# Human and economic costs of severe weather events in the United States (1950 - 2011)
 
 ## Synopsis
 
+Among the different storm event types tornados seem to have the most severe impact on population health taking into account numbers of people injured or killed. 
+In addition, there are a couple of other storm event types which influence both, injuries and fatalities, more drastically than others: Thunderstorm wind, excessive heat, flood and lightning. 
 
-In thec first chapter _Data Processing_ of this report we will derive a processed dataset based on the raw data. Based on the processed dataset, we will conduct a detailed data analysis in the subsequent chapter _Results_.
+However, compared to tornados their impact is quite smaller in regards to people affected. In general, the overall trend shows an increase of people injured or killed by storm events since the mid 90s. In parts, this can be explained with the massive increase of reported storm observations since 1993. 
+
+In the first chapter _Data Processing_ of this report we will derive a processed dataset based on the raw data. Based on the processed dataset, we will conduct a detailed data analysis in the subsequent chapter _Results_.
 
 ## Data Processing
 
@@ -435,10 +439,7 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 <figcaption><b>Figure 6: </b>There was a slight increase of reported observations pear year till 1988 (7252 obs). 1989 (10410) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 62134 observations. </figcaption></figure>
 
 
-
-
-
 ### Storm events in the United States having the greated economic consequences
 
-__Note__: Based on time constraints I was not able to answer this question of the assignment. 
+__Note__: Based on time constraints on my side I was not able to answer this question of the assignment. 
 
