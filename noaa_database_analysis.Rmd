@@ -3,7 +3,11 @@
 ## Synopsis
 
 
+In thec first chapter _Data Processing_ of this report we will derive a processed dataset based on the raw data. Based on the processed dataset, we will conduct a detailed data analysis in the subsequent chapter _Results_.
+
 ## Data Processing
+
+
 
 ### Loading libraries 
 
@@ -15,6 +19,7 @@ library(ggplot2)
 library(xtable)
 library(grid)
 library(lubridate)
+library(reshape2)
 
 ```
 
@@ -276,6 +281,8 @@ wind
 Table:  <b>Table 3:</b> Differences in event type names between original documentation and processed data
 
 
+### Derive final version of processed dataset
+
 Besides __EVTYPE__ the following other variables in the raw dataset are of interest for our latter analysis:
 
 * __BGN_DATE__: Date the storm event began
@@ -296,7 +303,7 @@ names(storms_df) <- tolower(names(storms_df))
 
 ```
 
-Our final tiny dataset looks as follows:
+Our final tidy dataset looks as follows:
 
 ```{r}
 
@@ -309,7 +316,7 @@ str(storms_df)
 
 ## Results
 
-Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+### Storm event types in the United States most harmful with respect to population health
 
 The two variables giving an indication of the impact of storm events on population health are:
 
@@ -382,7 +389,32 @@ ggplot(inj_fat_by_evtype_df, aes(evtype, fatalities)) +
 <figcaption><b>Figure 4: Fatalities by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1914 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (1014), heat (937), lightning (816) thunderstorm wind (706), and rip current (572).</figcaption></figure>
 
 
+Next, we examine how the numbers of people injured / people killed did change over time:
+
+```{r}
+
+inj_fat_by_year_df <- group_by(storms_df, year) %>%
+  summarize(
+    injuries = sum(injuries),
+    fatalities = sum(fatalities)
+    )
+
+inj_fat_by_year_df <- melt(inj_fat_by_year_df, id = 'year', variable = 'Outcome')
+
+ggplot(inj_fat_by_year_df, aes(year, value)) +
+  geom_line(colour = 'steelblue') +
+  geom_smooth() +
+  xlab('Number of people affected by storm events') +
+  ylab('Year') +
+  ggtitle('') +
+  theme_bw() +
+  facet_wrap(~ Outcome, scales = 'free_y') 
 
 
+```
 
-Across the United States, which types of events have the greatest economic consequences?
+
+### Storm events in the United States having the greated economic consequences
+
+__Note__: Based on time constraints I was not able to answer this question of the assignment. 
+
