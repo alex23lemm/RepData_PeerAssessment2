@@ -337,7 +337,7 @@ summary(storms_df$injuries)
 ```
 
 <figure>
-```{r fig.width=12}
+```{r inj_fat_histograms, fig.width=12}
 
 
 
@@ -420,7 +420,7 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
 The general pattern which the smoother highlights in the time series plot above, can partly be explained with the progression of available observations per year:
 
 <figure>
-```{r}
+```{r obs_time_series}
 
 obs_by_year_df <- group_by(storms_df, year) %>%
   summarize(
@@ -442,4 +442,8 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 ### Storm events in the United States having the greated economic consequences
 
 __Note__: Based on time constraints on my side I was not able to answer the second question of the assignment. 
+
+## Additional Info
+
+The code which created this report can also be found on GitHub: https://github.com/alex23lemm/RepData_PeerAssessment2
 
