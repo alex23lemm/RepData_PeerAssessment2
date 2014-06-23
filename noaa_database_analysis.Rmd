@@ -2,10 +2,10 @@
 
 ## Synopsis
 
-Among the different storm event types tornados seem to have the most severe impact on population health taking into account numbers of people injured or killed. 
-In addition, there are a couple of other storm event types which influence both, injuries and fatalities, more drastically than others: Thunderstorm wind, excessive heat, flood and lightning. 
+Among the different storm event types, tornados seem to have the most severe impact on population health taking into account numbers of people injured or killed. 
+In addition, there are a couple of other storm event types which influence both, injuries and fatalities, more drastically than others: Thunderstorm wind, excessive heat, flood and lightning. However, compared to tornados their impact is smaller in regards to people affected. 
 
-However, compared to tornados their impact is quite smaller in regards to people affected. In general, the overall trend shows an increase of people injured or killed by storm events since the mid 90s. In parts, this can be explained with the massive increase of reported storm observations since 1993. 
+In general, the overall trend shows an increase of people injured or killed by storm events since the mid 90s. In parts, this can be explained with the massive increase of reported storm observations since 1993. 
 
 In the first chapter _Data Processing_ of this report we will derive a processed dataset based on the raw data. Based on the processed dataset, we will conduct a detailed data analysis in the subsequent chapter _Results_.
 
@@ -417,7 +417,7 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
 ```
 <figcaption><b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</figcaption></figure>
 
-The general pattern which the smoother highlights in the time series plot above, can partly explained with the progression of available observations per year:
+The general pattern which the smoother highlights in the time series plot above, can partly be explained with the progression of available observations per year:
 
 <figure>
 ```{r}
@@ -441,5 +441,5 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 
 ### Storm events in the United States having the greated economic consequences
 
-__Note__: Based on time constraints on my side I was not able to answer this question of the assignment. 
+__Note__: Based on time constraints on my side I was not able to answer the second question of the assignment. 
 
