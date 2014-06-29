@@ -293,6 +293,16 @@ Table:  <b>Table 3:</b> Differences in event type names between original documen
 
 ### The STATE variable
 
+The STATE variable includes the following values:
+
+```{r}
+
+unique(storms_df$STATE)
+
+```
+
+We will only take into account observations associated with one of the 50 official U.S. federal states. Every other observation will be dropped. 
+
 ```{r}
 
 dim(storms_df)
@@ -306,14 +316,13 @@ dim(storms_df)
 
 ### Derive final version of processed dataset
 
-Besides __EVTYPE__ the following other variables in the raw dataset are of interest for our latter analysis:
+Besides __EVTYPE__ and __STATE__ the following other variables in the raw dataset are of interest for our latter analysis:
 
 * __BGN_DATE__: Date the storm event began
 * __FATALATIES__: Number of directly killed
 * __INJURIES__: Number directly killed
-* __STATE__:
 
-We will reduce our final processed dataset to those 4 variables with a slight transformation of the __BGN_DATE__ column to represent the year the storm event occured instead of the date.
+We will reduce our final processed dataset to those 5 variables with a slight transformation of the __BGN_DATE__ column to represent the year the storm event occured instead of the date.
 
 ```{r}
 
