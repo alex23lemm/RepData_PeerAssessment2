@@ -1,4 +1,4 @@
-# Human and economic costs of severe weather events in the United States (1950 - 2011)
+# Human costs of severe weather events in the United States (1950 - 2011)
 
 ## Synopsis
 
@@ -8,6 +8,8 @@ In addition, there are a couple of other storm event types which influence both,
 In general, the overall trend shows an increase of people injured or killed by storm events since the mid 90s. In parts, this can be explained with the massive increase of reported storm observations since 1993. 
 
 In the first chapter _Data Processing_ of this report we will derive a processed dataset based on the raw data. Based on the processed dataset, we will conduct a detailed data analysis in the subsequent chapter _Results_.
+
+__Note__: Based on time constraints on my side I was not able to answer the second question of the assignment. 
 
 ## Data Processing
 
@@ -49,6 +51,9 @@ names(storms_df)
 
 ```
 
+
+
+### The EVTYPE variable
 
 We take a close look at the `EVTYPE` variable which is extremely important for answering both questions addressed in this report. 
 
@@ -179,7 +184,8 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
   scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
 
 ```
-<figcaption>__Figure 1: Percentage contribution of each event type to total amount of observations.__ The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. </figcaption></figure>
+<figcaption>__Figure 1: Percentage contribution of each event type to total amount of observations.__ The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. </figcaption>
+</figure>
 
 ```{r}
 # Remove dummy row
@@ -284,6 +290,18 @@ wind
 
 Table:  <b>Table 3:</b> Differences in event type names between original documentation and processed data
 
+### The STATE variable
+
+```{r}
+
+dim(storms_df)
+
+storms_df <- filter(storms_df, STATE %in% state.abb)
+
+dim(storms_df)
+
+```
+
 
 ### Derive final version of processed dataset
 
@@ -292,12 +310,13 @@ Besides __EVTYPE__ the following other variables in the raw dataset are of inter
 * __BGN_DATE__: Date the storm event began
 * __FATALATIES__: Number of directly killed
 * __INJURIES__: Number directly killed
+* __STATE__:
 
 We will reduce our final processed dataset to those 4 variables with a slight transformation of the __BGN_DATE__ column to represent the year the storm event occured instead of the date.
 
 ```{r}
 
-storms_df <- select(storms_df, BGN_DATE, EVTYPE, FATALITIES, INJURIES) %>%
+storms_df <- select(storms_df, BGN_DATE, EVTYPE, FATALITIES, INJURIES, STATE) %>%
   mutate(
     year = year(mdy_hms(BGN_DATE))
     ) %>%
@@ -315,6 +334,10 @@ str(storms_df)
 
 ```
 
+```{r}
+
+storms_df$STATE <- mapvalues(storms_df$STATE, state.abb, state.name)
+```
 
 
 
@@ -352,7 +375,8 @@ with(storms_df, {
 
 ```
 <figcaption>__Figure 2: Distribution of injuries and fatalities__ __(a)__ Injuries are right skewed
-__(b)__ Fatalities are right skewed. In the majority of the reported storm events either 0 or a tiny number of people were injured or killed</figcaption></figure>
+__(b)__ Fatalities are right skewed. In the majority of the reported storm events either 0 or a tiny number of people were injured or killed</figcaption>
+</figure>
 
 We take a look at the total amount of persons injured or killed by event type:
 
@@ -374,7 +398,8 @@ ggplot(inj_fat_by_evtype_df, aes(evtype, injuries)) +
   theme(axis.text.x = element_text(angle = -90, hjust= 0, vjust=0.1, size = 8))
 
 ```
-<figcaption><b>Figure 3: Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9448 persons injured. The only other storm events above the 5000 threshold are flood (6791), excessive heat (6542), and lightning (5230).</figcaption></figure>
+<figcaption><b>Figure 3: Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9448 persons injured. The only other storm events above the 5000 threshold are flood (6791), excessive heat (6542), and lightning (5230).</figcaption>
+</figure>
 
 <figure>
 ```{r fatalities_barplot}
@@ -388,7 +413,8 @@ ggplot(inj_fat_by_evtype_df, aes(evtype, fatalities)) +
   theme(axis.text.x = element_text(angle = -90, hjust= 0, vjust=0.1, size = 8))
 
 ```
-<figcaption><b>Figure 4: Fatalities by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1914 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (1014), heat (937), lightning (816) thunderstorm wind (706), and rip current (572).</figcaption></figure>
+<figcaption><b>Figure 4: Fatalities by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1914 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (1014), heat (937), lightning (816) thunderstorm wind (706), and rip current (572).</figcaption>
+</figure>
 
 
 Next, we examine how the numbers of people injured / people killed did change over time:
@@ -415,7 +441,8 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
 
 
 ```
-<figcaption><b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</figcaption></figure>
+<figcaption><b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</figcaption>
+</figure>
 
 The general pattern which the smoother highlights in the time series plot above, can partly be explained with the progression of available observations per year:
 
@@ -436,12 +463,9 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 
 
 ```
-<figcaption><b>Figure 6: </b>There was a slight increase of reported observations pear year till 1988 (7252 obs). 1989 (10410) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 62134 observations. </figcaption></figure>
+<figcaption><b>Figure 6: </b>There was a slight increase of reported observations pear year till 1988 (7252 obs). 1989 (10410) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 62134 observations. </figcaption>
+</figure>
 
-
-### Storm events in the United States having the greated economic consequences
-
-__Note__: Based on time constraints on my side I was not able to answer the second question of the assignment. 
 
 ## Additional Info
 
