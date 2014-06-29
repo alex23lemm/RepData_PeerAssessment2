@@ -25,9 +25,7 @@ we will conduct a detailed data analysis in the subsequent chapter
 *Results*.
 
 **Note**: Based on time constraints on my side I was not able to answer
-the second question of the assignment. The code which created this
-report can also be found on GitHub:
-<https://github.com/alex23lemm/RepData_PeerAssessment2>.
+the second question of the assignment.
 
 Data Processing
 ---------------
@@ -102,7 +100,7 @@ event type term *Thunderstorm Wind*:
                  caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 14:36:06 2014 -->
+<!-- Sun Jun 29 18:28:16 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
@@ -597,7 +595,7 @@ simple quantitative approach consisting of 5 steps:
                  caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 14:36:06 2014 -->
+<!-- Sun Jun 29 18:28:18 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1184,7 +1182,7 @@ We decide to include the first 69 ordered event types which account for
           include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 14:36:07 2014 -->
+<!-- Sun Jun 29 18:28:18 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
@@ -1450,9 +1448,11 @@ type:
 
     ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, injuries), injuries)) + 
       geom_bar(stat='identity', fill = 'steelblue') +
+      geom_text(aes(label = injuries), size = 4, hjust = -0.1) +
       xlab('Storm event types') +
       ylab('Number of people injured') +
       ggtitle('Top 10 storm event types causing injuries') +
+      ylim(0, max(inj_fat_by_evtype_df$injuries * 1.05)) +
       coord_flip() +
       theme_bw()
 
@@ -1461,9 +1461,9 @@ injuries\_barplot](./noaa_database_analysis_files/figure-markdown_strict/injurie
 <figcaption>
 <b>Figure 3: Injuries by storm event type in the United States (1950 -
 2011)</b> Tornado ranks first with 91346 caused injuries followed by
-thunderstorm wind with 9448 persons injured. The only other storm events
-above the 5000 threshold are flood (6791), excessive heat (6542), and
-lightning (5230).
+thunderstorm wind with 9402 persons injured. The only other storm events
+above the 5000 threshold are flood (6788), excessive heat (6225), and
+lightning (5212).
 </figcaption>
 </figure>
 
@@ -1473,9 +1473,11 @@ lightning (5230).
 
     ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities)) + 
       geom_bar(stat='identity', fill = 'steelblue') +
+      geom_text(aes(label = fatalities), size = 4 , hjust = -0.1) +
       xlab('Storm event types') +
       ylab('Number of people killed') +
       ggtitle('Top 10 storm event types causing fatalities') +
+      ylim(0, max(inj_fat_by_evtype_df$fatalities * 1.05)) +
       coord_flip() +
       theme_bw() 
 
@@ -1484,10 +1486,10 @@ fatalities\_barplot](./noaa_database_analysis_files/figure-markdown_strict/fatal
 <figcaption>
 <b>Figure 4: Fatalities by storm event type in the United States (1950 -
 2011)</b> Tornado ranks first with 5633 caused fatalities followed by
-excessive heat with 1914 persons killed. The only other storm events
+excessive heat with 1894 persons killed. The only other storm events
 which have killed more than 500 persons in the last six decaces are
-flash flood (1014), heat (937), lightning (816) thunderstorm wind (706),
-and rip current (572).
+flash flood (975), heat (935), lightning (806) thunderstorm wind (703),
+and rip current (518).
 </figcaption>
 </figure>
 
