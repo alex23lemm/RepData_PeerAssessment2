@@ -100,7 +100,7 @@ event type term *Thunderstorm Wind*:
                  caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 18:28:16 2014 -->
+<!-- Sun Jun 29 21:02:32 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
@@ -595,7 +595,7 @@ simple quantitative approach consisting of 5 steps:
                  caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 18:28:18 2014 -->
+<!-- Sun Jun 29 21:02:33 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1182,7 +1182,7 @@ We decide to include the first 69 ordered event types which account for
           include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 18:28:18 2014 -->
+<!-- Sun Jun 29 21:02:33 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
