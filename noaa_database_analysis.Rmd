@@ -85,9 +85,9 @@ print(xtable(tstm_subset_df[743:823, ],
 
 
 ```
-<br>
 
-This is caused by:
+
+This is caused by:  
 
 1. Modifications of the official event type name (e.g., THUNDERSTORM  WINDS or THUNDERSTORM)
 2. Typos (e.g., THUDERSTORM WINDS or THUNDERSTORM WINS)
@@ -98,7 +98,7 @@ This shows that in the majority of the cases the event reporters used the offici
 
 ### Event type number reduction strategy
 
-In order to reduce the number of event types to a fair amount, we use a simple quantitative approach consisting of 5 steps:
+In order to reduce the number of event types to a fair amount, we use a simple quantitative approach consisting of 5 steps:   
 
 1. We convert the `EVTYPE` column to lower case and remove leading and trailing white spaces
 2. For each of the remaining unique event types we calculate how much it contributes to the overall completeness of the number of observations
@@ -152,7 +152,7 @@ print(xtable(storms_by_evtype_df[1:47, ],
              caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 ```
-<br>
+
 
 
 As the table above shows, the first 47 event types already make up for 99 % of the total amount of observations. 
@@ -200,7 +200,7 @@ print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html'
       include.rownames = FALSE)
 
 ```
-<br>
+
 
 This is equivalent to include all event types which contribute more than 100 observations to the dataset.
 
