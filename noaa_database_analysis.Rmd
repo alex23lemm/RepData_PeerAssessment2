@@ -393,13 +393,15 @@ inj_fat_by_evtype_df <- group_by(storms_df, evtype) %>%
     fatalities = sum(fatalities)
     )
 
-ggplot(inj_fat_by_evtype_df, aes(evtype, injuries)) + 
+inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(injuries))
+
+ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, injuries), injuries)) + 
   geom_bar(stat='identity', fill = 'steelblue') +
   xlab('Storm event types') +
   ylab('Number of people injured') +
-  ggtitle('Number of injuries by storm event type') +
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = -90, hjust= 0, vjust=0.1, size = 8))
+  ggtitle('Top 10 storm event types causing injuries') +
+  coord_flip() +
+  theme_bw()
 
 ```
 <figcaption><b>Figure 3: Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9448 persons injured. The only other storm events above the 5000 threshold are flood (6791), excessive heat (6542), and lightning (5230).</figcaption>
@@ -408,13 +410,15 @@ ggplot(inj_fat_by_evtype_df, aes(evtype, injuries)) +
 <figure>
 ```{r fatalities_barplot}
 
-ggplot(inj_fat_by_evtype_df, aes(evtype, fatalities)) + 
+inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(fatalities))
+
+ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities)) + 
   geom_bar(stat='identity', fill = 'steelblue') +
   xlab('Storm event types') +
   ylab('Number of people killed') +
-  ggtitle('Number of fatalities by storm event type') +
-  theme_bw() + 
-  theme(axis.text.x = element_text(angle = -90, hjust= 0, vjust=0.1, size = 8))
+  ggtitle('Top 10 storm event types causing fatalities') +
+  coord_flip() +
+  theme_bw() 
 
 ```
 <figcaption><b>Figure 4: Fatalities by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1914 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (1014), heat (937), lightning (816) thunderstorm wind (706), and rip current (572).</figcaption>
