@@ -9,23 +9,24 @@ In general, the overall trend shows an increase of people injured or killed by s
 
 In the first chapter _Data Processing_ of this report we will derive a processed dataset based on the raw data. Based on the processed dataset, we will conduct a detailed data analysis in the subsequent chapter _Results_.
 
-__Note__: Based on time constraints on my side I was not able to answer the second question of the assignment. 
+__Note__: Based on time constraints on my side I was not able to answer the second question of the assignment. The code which created this report can also be found on GitHub: https://github.com/alex23lemm/RepData_PeerAssessment2.
 
 ## Data Processing
-
-
 
 ### Loading libraries 
 
 ```{r message=FALSE}
 
 library(stringr)
+library(plyr)
 library(dplyr)
 library(ggplot2)
 library(xtable)
 library(grid)
 library(lubridate)
 library(reshape2)
+library(maps)
+library(RColorBrewer)
 
 ```
 
@@ -316,7 +317,7 @@ We will reduce our final processed dataset to those 4 variables with a slight tr
 
 ```{r}
 
-storms_df <- select(storms_df, BGN_DATE, EVTYPE, FATALITIES, INJURIES, STATE) %>%
+storms_df <- select(storms_df, BGN_DATE, STATE, EVTYPE, FATALITIES, INJURIES) %>%
   mutate(
     year = year(mdy_hms(BGN_DATE))
     ) %>%
@@ -336,7 +337,7 @@ str(storms_df)
 
 ```{r}
 
-storms_df$STATE <- mapvalues(storms_df$STATE, state.abb, state.name)
+storms_df$state <- mapvalues(storms_df$state, state.abb, state.name)
 ```
 
 
@@ -467,7 +468,96 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 </figure>
 
 
+
+```{r}
+
+# Create two data frames needed for plotting chloropleth maps
+
+states <- map_data('state')
+
+# (1) Group storm data by state
+# (2) Calculate sum of fatalities and injuries for each subgroup
+# (3) Map state abbreviations to full names
+storms_by_state <- group_by(storms_df, state) %>%
+  summarize(
+    injuries = sum(injuries),
+    fatalities = sum(fatalities)
+    ) %>%
+  mutate (
+    state = tolower(mapvalues(state, state.abb, state.name))
+    )
+
+# Create additional data frame for plotting the federal state labels later
+state_name_pos <- as.data.frame(state.center)
+state_name_pos <- cbind(state_name_pos, state.abb)
+names(state_name_pos) <- c('long', 'lat', 'abb')
+# Exclude Alaska and Hawaii
+state_name_pos <- filter(state_name_pos, !abb %in% c('AK', 'HI'))
+
+```
+
+```{r}
+
+ggplot(storms_by_state, aes(map_id = state, fill = injuries)) +
+  geom_map(map = states, colour = 'grey', linestyle = 2) +
+  geom_text(aes(x = long, y = lat, label = abb, fill = NULL, map_id=NULL), 
+            state_name_pos,
+           size = 2) +
+  ggtitle('Distribution of injuries by storm events among U.S. federal states \n (1950 - 2011)') +
+  coord_map('polyconic') +
+  expand_limits(x = states$long, y = states$lat) +
+  
+  scale_fill_gradient(low="white", 
+                      high="#756bb1", 
+                      breaks=seq(0, max(storms_by_state$injuries), by=2000)) +
+  theme(
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      axis.ticks.length = unit(0, "cm"),
+      axis.ticks.margin = unit(0, "cm"),
+      panel.margin = unit(0, "lines"),
+      plot.margin = unit(c(0, 0, 0, 0), "lines"), 
+      complete = TRUE
+    ) 
+
+```
+
+
+```{r}
+
+ggplot(storms_by_state, aes(map_id = state, fill = fatalities)) +
+  geom_map(map = states, colour = 'grey', linestyle = 2) +
+  geom_text(aes(x = long, y = lat, label = abb, fill = NULL, map_id=NULL), 
+            state_name_pos,
+            size = 2) +
+  ggtitle('Distribution of fatalities by storm events among U.S. federal states \n (1950 - 2011)') +
+  coord_map('polyconic') +
+  expand_limits(x = states$long, y = states$lat) +
+  
+  scale_fill_gradient(low="white", 
+                      high="#756bb1", 
+                      breaks=seq(0, max(storms_by_state$injuries), by=200)) +
+  theme(
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      axis.ticks.length = unit(0, "cm"),
+      axis.ticks.margin = unit(0, "cm"),
+      panel.margin = unit(0, "lines"),
+      plot.margin = unit(c(0, 0, 0, 0), "lines"), 
+      complete = TRUE
+    ) 
+
+
+```
+
+
+
+
 ## Additional Info
 
-The code which created this report can also be found on GitHub: https://github.com/alex23lemm/RepData_PeerAssessment2
+
 
