@@ -335,12 +335,6 @@ str(storms_df)
 
 ```
 
-```{r}
-
-storms_df$state <- mapvalues(storms_df$state, state.abb, state.name)
-```
-
-
 
 ## Results
 
@@ -467,7 +461,7 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 <figcaption><b>Figure 6: </b>There was a slight increase of reported observations pear year till 1988 (7252 obs). 1989 (10410) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 62134 observations. </figcaption>
 </figure>
 
-
+In the last step, we show how injuries and fatalities are distributed among the different U.S. federal states.
 
 ```{r}
 
@@ -523,6 +517,7 @@ ggplot(storms_by_state, aes(map_id = state, fill = injuries)) +
     ) 
 
 ```
+<p><b>Figure 7</b>: In general, more people in the south east / east got injured in storm events compared to the rest of the country. Most of the people got injured in Texas.</p>
 
 
 ```{r}
@@ -553,11 +548,6 @@ ggplot(storms_by_state, aes(map_id = state, fill = fatalities)) +
 
 
 ```
-
-
-
-
-## Additional Info
-
+<p><b>Figure 7</b>: In general, more people in the east were killed during storm events compared to the rest of the country. Most of the people were killed in Texas and Illinois.</p>
 
 
