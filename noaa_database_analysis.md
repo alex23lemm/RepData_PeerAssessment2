@@ -100,7 +100,7 @@ event type term *Thunderstorm Wind*:
                  caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon Jun 30 00:22:14 2014 -->
+<!-- Mon Jun 30 00:35:07 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
@@ -522,7 +522,6 @@ This is caused by:
 
 1.  Modifications of the official event type name (e.g., THUNDERSTORM
     WINDS or THUNDERSTORM)
-
 2.  Typos (e.g., THUDERSTORM WINDS or THUNDERSTORM WINS)
 
 However, 82563 observations tagged with the official term *Thunderstorm
@@ -539,16 +538,12 @@ simple quantitative approach consisting of 5 steps:
 
 1.  We convert the `EVTYPE` column to lower case and remove leading and
     trailing white spaces
-
 2.  For each of the remaining unique event types we calculate how much
     it contributes to the overall completeness of the number of
     observations
-
 3.  We decide on a threshold and select those event types which
     contribute the most to the overall amount of observations
-
 4.  We filter the loaded raw data according to chosen event types
-
 5.  The remaining set is further reduced by merging similar storm events
     with different wording
 
@@ -595,7 +590,7 @@ simple quantitative approach consisting of 5 steps:
                  caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon Jun 30 00:22:15 2014 -->
+<!-- Mon Jun 30 00:35:08 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1152,9 +1147,10 @@ This can be shown even better when plotting the grouped data.
 
 ![plot of chunk
 cumulativeContributionFunction](./noaa_database_analysis_files/figure-markdown_strict/cumulativeContributionFunction.png)
+
 <p>
-**Figure 1: Percentage contribution of each event type to total amount
-of observations.** The x-axis represents all remaining 891 event types
+<b>Figure 1: Percentage contribution of each event type to total amount
+of observations.</b> The x-axis represents all remaining 891 event types
 (after the first pre-processing step) in the dataset expressed in
 numbers and ordered by their descending percentage contribution. The
 first 69 event types (vertical line) account for 99,5 % of the total
@@ -1179,7 +1175,7 @@ We decide to include the first 69 ordered event types which account for
           include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon Jun 30 00:22:15 2014 -->
+<!-- Mon Jun 30 00:35:08 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
@@ -1421,10 +1417,10 @@ We will examine both variables in detail:
 ![plot of chunk
 inj\_fat\_histograms](./noaa_database_analysis_files/figure-markdown_strict/inj_fat_histograms.png)
 <p>
-**Figure 2: Distribution of injuries and fatalities** **(a)** Injuries
-are right skewed **(b)** Fatalities are right skewed. In the majority of
-the reported storm events either 0 or a tiny number of people were
-injured or killed
+<b>Figure 2: Distribution of injuries and fatalities</b> **(a)**
+Injuries are right skewed **(b)** Fatalities are right skewed. In the
+majority of the reported storm events either 0 or a tiny number of
+people were injured or killed
 </p>
 
 We take a look at the total amount of persons injured or killed by event
@@ -1451,8 +1447,8 @@ type:
 ![plot of chunk
 injuries\_barplot](./noaa_database_analysis_files/figure-markdown_strict/injuries_barplot.png)
 <p>
-**Figure 3:** Injuries by storm event type in the United States (1950 -
-2011)</b> Tornado ranks first with 91346 caused injuries followed by
+<b>Figure 3:</b> Injuries by storm event type in the United States (1950
+- 2011)</b> Tornado ranks first with 91346 caused injuries followed by
 thunderstorm wind with 9402 persons injured. The only other storm events
 above the 5000 threshold are flood (6788), excessive heat (6225), and
 lightning (5212).
@@ -1475,8 +1471,8 @@ lightning (5212).
 ![plot of chunk
 fatalities\_barplot](./noaa_database_analysis_files/figure-markdown_strict/fatalities_barplot.png)
 <p>
-**Figure 4: Fatalities by storm event type in the United States (1950 -
-2011)** Tornado ranks first with 5633 caused fatalities followed by
+<b>Figure 4: Fatalities by storm event type in the United States (1950 -
+2011)</b> Tornado ranks first with 5633 caused fatalities followed by
 excessive heat with 1894 persons killed. The only other storm events
 which have killed more than 500 persons in the last six decaces are
 flash flood (975), heat (935), lightning (806) thunderstorm wind (703),
@@ -1507,7 +1503,7 @@ change over time:
 ![plot of chunk
 inj\_fat\_time\_series](./noaa_database_analysis_files/figure-markdown_strict/inj_fat_time_series.png)
 <p>
-**Figure 5:** Both outcomes show a similar pattern highlighted by the
+<b>Figure 5:</b> Both outcomes show a similar pattern highlighted by the
 smoother: Injuries and fatalities both drop at the end of the 70s before
 they start increasing again. In addition, the absolute numbers show a
 sudden increase followed by a quick drop for both outcomes at the end of
@@ -1534,10 +1530,10 @@ observations per year:
 ![plot of chunk
 obs\_time\_series](./noaa_database_analysis_files/figure-markdown_strict/obs_time_series.png)
 <p>
-**Figure 6:** There was a slight increase of reported observations pear
-year till 1988 (7254 obs). 1989 (10407) marks the first year with more
-than 10000 reported observations. A massive rise started in the mid 90s
-with 2011 as the new peak with 60091 observations.
+<b>Figure 6:</b> There was a slight increase of reported observations
+pear year till 1988 (7254 obs). 1989 (10407) marks the first year with
+more than 10000 reported observations. A massive rise started in the mid
+90s with 2011 as the new peak with 60091 observations.
 </p>
 
 In the last step, we show how injuries and fatalities are distributed
@@ -1593,7 +1589,7 @@ among the different U.S. federal states.
 ![plot of chunk
 inj\_chloropleth](./noaa_database_analysis_files/figure-markdown_strict/inj_chloropleth.png)
 <p>
-**Figure 7**: In general, more people in the south east / east got
+<b>Figure 7</b>: In general, more people in the south east / east got
 injured in storm events compared to the rest of the country. Most of the
 people got injured in Texas.
 </p>
@@ -1627,7 +1623,7 @@ people got injured in Texas.
 ![plot of chunk
 fat\_chloropleth](./noaa_database_analysis_files/figure-markdown_strict/fat_chloropleth.png)
 <p>
-**Figure 8**: In general, more people in the east were killed during
+<b>Figure 8</b>: In general, more people in the east were killed during
 storm events compared to the rest of the country. Most of the people
 were killed in Texas and Illinois.
 </p>

@@ -89,8 +89,7 @@ print(xtable(tstm_subset_df[743:823, ],
 
 This is caused by:
 
-1. Modifications of the official event type name (e.g., THUNDERSTORM  WINDS or THUNDERSTORM) 
-
+1. Modifications of the official event type name (e.g., THUNDERSTORM  WINDS or THUNDERSTORM)
 2. Typos (e.g., THUDERSTORM WINDS or THUNDERSTORM WINS)
 
 However, 82563 observations tagged with the official term _Thunderstorm Wind_  are included in the dataset whereas most of the event name modifications just include a single observation.
@@ -101,15 +100,11 @@ This shows that in the majority of the cases the event reporters used the offici
 
 In order to reduce the number of event types to a fair amount, we use a simple quantitative approach consisting of 5 steps:
 
-1. We convert the `EVTYPE` column to lower case and remove leading and trailing white spaces 
-
+1. We convert the `EVTYPE` column to lower case and remove leading and trailing white spaces
 2. For each of the remaining unique event types we calculate how much it contributes to the overall completeness of the number of observations
-
 3. We decide on a threshold and select those event types which contribute the most to the overall amount of observations
-
 4. We filter the loaded raw data according to chosen event types
-
-5. The remaining set is further reduced by merging similar storm events with different wording  
+5. The remaining set is further reduced by merging similar storm events with different wording
 
 #### Step 1: Removing leading and trailing which spaces
 
@@ -185,7 +180,8 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
   scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
 
 ```
-<p>__Figure 1: Percentage contribution of each event type to total amount of observations.__ The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation.</p>
+
+<p><b>Figure 1: Percentage contribution of each event type to total amount of observations.</b> The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation.</p>
 
 ```{r}
 # Remove dummy row
@@ -377,7 +373,7 @@ with(storms_df, {
 
 
 ```
-<p>__Figure 2: Distribution of injuries and fatalities__ __(a)__ Injuries are right skewed
+<p><b>Figure 2: Distribution of injuries and fatalities</b> __(a)__ Injuries are right skewed
 __(b)__ Fatalities are right skewed. In the majority of the reported storm events either 0 or a tiny number of people were injured or killed</p>
 
 We take a look at the total amount of persons injured or killed by event type:
@@ -403,7 +399,7 @@ ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, injuries), injuries)) +
   theme_bw()
 
 ```
-<p>__Figure 3:__ Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9402 persons injured. The only other storm events above the 5000 threshold are flood (6788), excessive heat (6225), and lightning (5212).</p>
+<p><b>Figure 3:</b> Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9402 persons injured. The only other storm events above the 5000 threshold are flood (6788), excessive heat (6225), and lightning (5212).</p>
 
 
 ```{r fatalities_barplot}
@@ -421,7 +417,7 @@ ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities
   theme_bw() 
 
 ```
-<p>__Figure 4: Fatalities by storm event type in the United States (1950 - 2011)__ Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1894 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (975), heat (935), lightning (806) thunderstorm wind (703), and rip current (518).</p>
+<p><b>Figure 4: Fatalities by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1894 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (975), heat (935), lightning (806) thunderstorm wind (703), and rip current (518).</p>
 
 
 Next, we examine how the numbers of people injured / people killed did change over time:
@@ -447,7 +443,7 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
 
 
 ```
-<p>__Figure 5:__ Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</p>
+<p><b>Figure 5:</b> Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</p>
 
 The general pattern which the smoother highlights in the time series plot above, can partly be explained with the progression of available observations per year:
 
@@ -467,7 +463,7 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 
 
 ```
-<p>__Figure 6:__ There was a slight increase of reported observations pear year till 1988 (7254 obs). 1989 (10407) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 60091 observations.</p>
+<p><b>Figure 6:</b> There was a slight increase of reported observations pear year till 1988 (7254 obs). 1989 (10407) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 60091 observations.</p>
 
 In the last step, we show how injuries and fatalities are distributed among the different U.S. federal states.
 
@@ -525,7 +521,7 @@ ggplot(storms_by_state, aes(map_id = state, fill = injuries)) +
     ) 
 
 ```
-<p>__Figure 7__: In general, more people in the south east / east got injured in storm events compared to the rest of the country. Most of the people got injured in Texas.</p>
+<p><b>Figure 7</b>: In general, more people in the south east / east got injured in storm events compared to the rest of the country. Most of the people got injured in Texas.</p>
 
 
 ```{r fat_chloropleth}
@@ -556,6 +552,6 @@ ggplot(storms_by_state, aes(map_id = state, fill = fatalities)) +
 
 
 ```
-<p>__Figure 8__: In general, more people in the east were killed during storm events compared to the rest of the country. Most of the people were killed in Texas and Illinois.</p>
+<p><b>Figure 8</b>: In general, more people in the east were killed during storm events compared to the rest of the country. Most of the people were killed in Texas and Illinois.</p>
 
 
