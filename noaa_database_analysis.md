@@ -100,7 +100,7 @@ event type term *Thunderstorm Wind*:
                  caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 21:02:32 2014 -->
+<!-- Mon Jun 30 00:22:14 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
@@ -595,7 +595,7 @@ simple quantitative approach consisting of 5 steps:
                  caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 21:02:33 2014 -->
+<!-- Mon Jun 30 00:22:15 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1141,8 +1141,6 @@ This can be shown even better when plotting the grouped data.
     storms_by_evtype_df <- rbind(storms_by_evtype_df, c(0, 0, 0, 0, 0)) %>%
       arrange(cumb_contrib_in_percent)
 
-<figure>
-
     ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) + 
       geom_line(color = 'steelblue') + 
       geom_vline(xintercept = 69) +
@@ -1154,7 +1152,7 @@ This can be shown even better when plotting the grouped data.
 
 ![plot of chunk
 cumulativeContributionFunction](./noaa_database_analysis_files/figure-markdown_strict/cumulativeContributionFunction.png)
-<figcaption>
+<p>
 **Figure 1: Percentage contribution of each event type to total amount
 of observations.** The x-axis represents all remaining 891 event types
 (after the first pre-processing step) in the dataset expressed in
@@ -1165,8 +1163,7 @@ contribute a tiny fraction to the overall percentage completeness of the
 observations, due to the fact that less than 6 observations belong to
 each of those event types. The last 449 event types even only contribute
 a single observation.
-</figcaption>
-</figure>
+</p>
 
 
     # Remove dummy row
@@ -1182,7 +1179,7 @@ We decide to include the first 69 ordered event types which account for
           include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Sun Jun 29 21:02:33 2014 -->
+<!-- Mon Jun 30 00:22:15 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
@@ -1413,8 +1410,6 @@ We will examine both variables in detail:
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
     ##     0.0     0.0     0.0     0.2     0.0  1700.0
 
-<figure>
-
     par(mfrow = c(1,2))
     with(storms_df, {
       hist(injuries, col='steelblue', border = 'steelblue', xlab = 'Injuries', 
@@ -1425,18 +1420,15 @@ We will examine both variables in detail:
 
 ![plot of chunk
 inj\_fat\_histograms](./noaa_database_analysis_files/figure-markdown_strict/inj_fat_histograms.png)
-<figcaption>
+<p>
 **Figure 2: Distribution of injuries and fatalities** **(a)** Injuries
 are right skewed **(b)** Fatalities are right skewed. In the majority of
 the reported storm events either 0 or a tiny number of people were
 injured or killed
-</figcaption>
-</figure>
+</p>
 
 We take a look at the total amount of persons injured or killed by event
 type:
-
-<figure>
 
     inj_fat_by_evtype_df <- group_by(storms_df, evtype) %>%
       summarize(
@@ -1448,32 +1440,31 @@ type:
 
     ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, injuries), injuries)) + 
       geom_bar(stat='identity', fill = 'steelblue') +
-      geom_text(aes(label = injuries), size = 4, hjust = -0.1) +
+      geom_text(aes(label = injuries), size = 3, hjust = -0.1) +
       xlab('Storm event types') +
       ylab('Number of people injured') +
       ggtitle('Top 10 storm event types causing injuries') +
-      ylim(0, max(inj_fat_by_evtype_df$injuries * 1.05)) +
+      ylim(0, max(inj_fat_by_evtype_df$injuries * 1.07)) +
       coord_flip() +
       theme_bw()
 
 ![plot of chunk
 injuries\_barplot](./noaa_database_analysis_files/figure-markdown_strict/injuries_barplot.png)
-<figcaption>
-<b>Figure 3: Injuries by storm event type in the United States (1950 -
+<p>
+**Figure 3:** Injuries by storm event type in the United States (1950 -
 2011)</b> Tornado ranks first with 91346 caused injuries followed by
 thunderstorm wind with 9402 persons injured. The only other storm events
 above the 5000 threshold are flood (6788), excessive heat (6225), and
 lightning (5212).
-</figcaption>
-</figure>
+</p>
 
-<figure>
+
 
     inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(fatalities))
 
     ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities)) + 
       geom_bar(stat='identity', fill = 'steelblue') +
-      geom_text(aes(label = fatalities), size = 4 , hjust = -0.1) +
+      geom_text(aes(label = fatalities), size = 3 , hjust = -0.1) +
       xlab('Storm event types') +
       ylab('Number of people killed') +
       ggtitle('Top 10 storm event types causing fatalities') +
@@ -1483,21 +1474,18 @@ lightning (5212).
 
 ![plot of chunk
 fatalities\_barplot](./noaa_database_analysis_files/figure-markdown_strict/fatalities_barplot.png)
-<figcaption>
-<b>Figure 4: Fatalities by storm event type in the United States (1950 -
-2011)</b> Tornado ranks first with 5633 caused fatalities followed by
+<p>
+**Figure 4: Fatalities by storm event type in the United States (1950 -
+2011)** Tornado ranks first with 5633 caused fatalities followed by
 excessive heat with 1894 persons killed. The only other storm events
 which have killed more than 500 persons in the last six decaces are
 flash flood (975), heat (935), lightning (806) thunderstorm wind (703),
 and rip current (518).
-</figcaption>
-</figure>
+</p>
 
 
 Next, we examine how the numbers of people injured / people killed did
 change over time:
-
-<figure>
 
     inj_fat_by_year_df <- group_by(storms_df, year) %>%
       summarize(
@@ -1518,21 +1506,18 @@ change over time:
 
 ![plot of chunk
 inj\_fat\_time\_series](./noaa_database_analysis_files/figure-markdown_strict/inj_fat_time_series.png)
-<figcaption>
-<b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the
+<p>
+**Figure 5:** Both outcomes show a similar pattern highlighted by the
 smoother: Injuries and fatalities both drop at the end of the 70s before
 they start increasing again. In addition, the absolute numbers show a
 sudden increase followed by a quick drop for both outcomes at the end of
 the 90s. However, 2011 again shows a sudden rise for injuries and
 fatalities.
-</figcaption>
-</figure>
+</p>
 
 The general pattern which the smoother highlights in the time series
 plot above, can partly be explained with the progression of available
 observations per year:
-
-<figure>
 
     obs_by_year_df <- group_by(storms_df, year) %>%
       summarize(
@@ -1548,13 +1533,12 @@ observations per year:
 
 ![plot of chunk
 obs\_time\_series](./noaa_database_analysis_files/figure-markdown_strict/obs_time_series.png)
-<figcaption>
-<b>Figure 6: </b>There was a slight increase of reported observations
-pear year till 1988 (7252 obs). 1989 (10410) marks the first year with
-more than 10000 reported observations. A massive rise started in the mid
-90s with 2011 as the new peak with 62134 observations.
-</figcaption>
-</figure>
+<p>
+**Figure 6:** There was a slight increase of reported observations pear
+year till 1988 (7254 obs). 1989 (10407) marks the first year with more
+than 10000 reported observations. A massive rise started in the mid 90s
+with 2011 as the new peak with 60091 observations.
+</p>
 
 In the last step, we show how injuries and fatalities are distributed
 among the different U.S. federal states.
@@ -1609,7 +1593,7 @@ among the different U.S. federal states.
 ![plot of chunk
 inj\_chloropleth](./noaa_database_analysis_files/figure-markdown_strict/inj_chloropleth.png)
 <p>
-<b>Figure 7</b>: In general, more people in the south east / east got
+**Figure 7**: In general, more people in the south east / east got
 injured in storm events compared to the rest of the country. Most of the
 people got injured in Texas.
 </p>
@@ -1643,7 +1627,7 @@ people got injured in Texas.
 ![plot of chunk
 fat\_chloropleth](./noaa_database_analysis_files/figure-markdown_strict/fat_chloropleth.png)
 <p>
-<b>Figure 8</b>: In general, more people in the east were killed during
+**Figure 8**: In general, more people in the east were killed during
 storm events compared to the rest of the country. Most of the people
 were killed in Texas and Illinois.
 </p>

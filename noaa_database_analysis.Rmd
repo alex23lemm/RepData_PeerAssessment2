@@ -33,7 +33,7 @@ library(RColorBrewer)
 
 ### Loading data into R
 
-```{r}
+```{r cache=TRUE}
 
 storms_df <- read.csv('repdata_data_StormData.csv.bz2', na.strings = c('NA', ''),
                       stringsAsFactors = FALSE)
@@ -172,7 +172,7 @@ storms_by_evtype_df <- rbind(storms_by_evtype_df, c(0, 0, 0, 0, 0)) %>%
 ```
 
 
-<figure>
+
 ```{r cumulativeContributionFunction}
 
 ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) + 
@@ -185,8 +185,7 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
   scale_x_continuous(breaks=seq(0, nrow(storms_by_evtype_df) , by = 100))
 
 ```
-<figcaption>__Figure 1: Percentage contribution of each event type to total amount of observations.__ The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation. </figcaption>
-</figure>
+<p>__Figure 1: Percentage contribution of each event type to total amount of observations.__ The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation.</p>
 
 ```{r}
 # Remove dummy row
@@ -363,7 +362,7 @@ summary(storms_df$injuries)
 
 ```
 
-<figure>
+
 ```{r inj_fat_histograms, fig.width=12}
 
 
@@ -378,13 +377,11 @@ with(storms_df, {
 
 
 ```
-<figcaption>__Figure 2: Distribution of injuries and fatalities__ __(a)__ Injuries are right skewed
-__(b)__ Fatalities are right skewed. In the majority of the reported storm events either 0 or a tiny number of people were injured or killed</figcaption>
-</figure>
+<p>__Figure 2: Distribution of injuries and fatalities__ __(a)__ Injuries are right skewed
+__(b)__ Fatalities are right skewed. In the majority of the reported storm events either 0 or a tiny number of people were injured or killed</p>
 
 We take a look at the total amount of persons injured or killed by event type:
 
-<figure>
 ```{r injuries_barplot}
 
 inj_fat_by_evtype_df <- group_by(storms_df, evtype) %>%
@@ -397,26 +394,25 @@ inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(injuries))
 
 ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, injuries), injuries)) + 
   geom_bar(stat='identity', fill = 'steelblue') +
-  geom_text(aes(label = injuries), size = 4, hjust = -0.1) +
+  geom_text(aes(label = injuries), size = 3, hjust = -0.1) +
   xlab('Storm event types') +
   ylab('Number of people injured') +
   ggtitle('Top 10 storm event types causing injuries') +
-  ylim(0, max(inj_fat_by_evtype_df$injuries * 1.05)) +
+  ylim(0, max(inj_fat_by_evtype_df$injuries * 1.07)) +
   coord_flip() +
   theme_bw()
 
 ```
-<figcaption><b>Figure 3: Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9402 persons injured. The only other storm events above the 5000 threshold are flood (6788), excessive heat (6225), and lightning (5212).</figcaption>
-</figure>
+<p>__Figure 3:__ Injuries by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 91346 caused injuries followed by thunderstorm wind with 9402 persons injured. The only other storm events above the 5000 threshold are flood (6788), excessive heat (6225), and lightning (5212).</p>
 
-<figure>
+
 ```{r fatalities_barplot}
 
 inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(fatalities))
 
 ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities)) + 
   geom_bar(stat='identity', fill = 'steelblue') +
-  geom_text(aes(label = fatalities), size = 4 , hjust = -0.1) +
+  geom_text(aes(label = fatalities), size = 3 , hjust = -0.1) +
   xlab('Storm event types') +
   ylab('Number of people killed') +
   ggtitle('Top 10 storm event types causing fatalities') +
@@ -425,13 +421,11 @@ ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities
   theme_bw() 
 
 ```
-<figcaption><b>Figure 4: Fatalities by storm event type in the United States (1950 - 2011)</b> Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1894 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (975), heat (935), lightning (806) thunderstorm wind (703), and rip current (518).</figcaption>
-</figure>
+<p>__Figure 4: Fatalities by storm event type in the United States (1950 - 2011)__ Tornado ranks first with 5633 caused fatalities followed by excessive heat with 1894 persons killed. The only other storm events which have killed more than 500 persons in the last six decaces are flash flood (975), heat (935), lightning (806) thunderstorm wind (703), and rip current (518).</p>
 
 
 Next, we examine how the numbers of people injured / people killed did change over time:
 
-<figure>
 ```{r inj_fat_time_series, message=FALSE}
 
 inj_fat_by_year_df <- group_by(storms_df, year) %>%
@@ -453,12 +447,10 @@ ggplot(inj_fat_by_year_df, aes(year, value)) +
 
 
 ```
-<figcaption><b>Figure 5: </b>Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</figcaption>
-</figure>
+<p>__Figure 5:__ Both outcomes show a similar pattern highlighted by the smoother: Injuries and fatalities both drop at the end of the 70s before they start increasing again. In addition, the absolute numbers show a sudden increase followed by a quick drop for both outcomes at the end of the 90s. However, 2011 again shows a sudden rise for injuries and fatalities.</p>
 
 The general pattern which the smoother highlights in the time series plot above, can partly be explained with the progression of available observations per year:
 
-<figure>
 ```{r obs_time_series}
 
 obs_by_year_df <- group_by(storms_df, year) %>%
@@ -475,8 +467,7 @@ ggplot(obs_by_year_df, aes(year, numb_of_obs)) +
 
 
 ```
-<figcaption><b>Figure 6: </b>There was a slight increase of reported observations pear year till 1988 (7252 obs). 1989 (10410) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 62134 observations. </figcaption>
-</figure>
+<p>__Figure 6:__ There was a slight increase of reported observations pear year till 1988 (7254 obs). 1989 (10407) marks the first year with more than 10000 reported observations. A massive rise started in the mid 90s with 2011 as the new peak with 60091 observations.</p>
 
 In the last step, we show how injuries and fatalities are distributed among the different U.S. federal states.
 
@@ -534,7 +525,7 @@ ggplot(storms_by_state, aes(map_id = state, fill = injuries)) +
     ) 
 
 ```
-<p><b>Figure 7</b>: In general, more people in the south east / east got injured in storm events compared to the rest of the country. Most of the people got injured in Texas.</p>
+<p>__Figure 7__: In general, more people in the south east / east got injured in storm events compared to the rest of the country. Most of the people got injured in Texas.</p>
 
 
 ```{r fat_chloropleth}
@@ -565,6 +556,6 @@ ggplot(storms_by_state, aes(map_id = state, fill = fatalities)) +
 
 
 ```
-<p><b>Figure 8</b>: In general, more people in the east were killed during storm events compared to the rest of the country. Most of the people were killed in Texas and Illinois.</p>
+<p>__Figure 8__: In general, more people in the east were killed during storm events compared to the rest of the country. Most of the people were killed in Texas and Illinois.</p>
 
 
