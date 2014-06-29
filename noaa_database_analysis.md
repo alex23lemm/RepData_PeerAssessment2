@@ -1,5 +1,5 @@
-Human and economic costs of severe weather events in the United States (1950 - 2011)
-====================================================================================
+Human costs of severe weather events in the United States (1950 - 2011)
+=======================================================================
 
 Synopsis
 --------
@@ -15,12 +15,19 @@ people affected.
 In general, the overall trend shows an increase of people injured or
 killed by storm events since the mid 90s. In parts, this can be
 explained with the massive increase of reported storm observations since
-1993.
+1993. In general, storm events seem to have a larger impact in the east
+/ south east of the United States on population health compared to the
+rest of the country.
 
 In the first chapter *Data Processing* of this report we will derive a
 processed dataset based on the raw data. Based on the processed dataset,
 we will conduct a detailed data analysis in the subsequent chapter
 *Results*.
+
+**Note**: Based on time constraints on my side I was not able to answer
+the second question of the assignment. The code which created this
+report can also be found on GitHub:
+<https://github.com/alex23lemm/RepData_PeerAssessment2>.
 
 Data Processing
 ---------------
@@ -28,12 +35,15 @@ Data Processing
 ### Loading libraries
 
     library(stringr)
+    library(plyr)
     library(dplyr)
     library(ggplot2)
     library(xtable)
     library(grid)
     library(lubridate)
     library(reshape2)
+    library(maps)
+    library(RColorBrewer)
 
 ### Loading data into R
 
@@ -60,6 +70,8 @@ Data Processing
     ## [26] "PROPDMGEXP" "CROPDMG"    "CROPDMGEXP" "WFO"        "STATEOFFIC"
     ## [31] "ZONENAMES"  "LATITUDE"   "LONGITUDE"  "LATITUDE_E" "LONGITUDE_"
     ## [36] "REMARKS"    "REFNUM"
+
+### The EVTYPE variable
 
 We take a close look at the `EVTYPE` variable which is extremely
 important for answering both questions addressed in this report.
@@ -90,7 +102,7 @@ event type term *Thunderstorm Wind*:
                  caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Tue Jun 24 00:31:56 2014 -->
+<!-- Sun Jun 29 14:36:06 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
@@ -585,7 +597,7 @@ simple quantitative approach consisting of 5 steps:
                  caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Tue Jun 24 00:31:57 2014 -->
+<!-- Sun Jun 29 14:36:06 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1172,7 +1184,7 @@ We decide to include the first 69 ordered event types which account for
           include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Tue Jun 24 00:31:57 2014 -->
+<!-- Sun Jun 29 14:36:07 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
@@ -1321,20 +1333,47 @@ documentation on page 6:
 </tbody>
 </table>
 
+### The STATE variable
+
+The STATE variable includes the following values:
+
+    unique(storms_df$STATE)
+
+    ##  [1] "AL" "AZ" "AR" "CA" "CO" "CT" "DE" "DC" "FL" "GA" "HI" "ID" "IL" "IN"
+    ## [15] "IA" "KS" "KY" "LA" "ME" "MD" "MA" "MI" "MN" "MS" "MO" "MT" "NE" "NV"
+    ## [29] "NH" "NJ" "NM" "NY" "NC" "ND" "OH" "OK" "OR" "PA" "RI" "SC" "SD" "TN"
+    ## [43] "TX" "UT" "VT" "VA" "WA" "WV" "WI" "WY" "PR" "AK" "ST" "AS" "GU" "MH"
+    ## [57] "VI" "AM" "LC" "PH" "GM" "PZ" "AN" "LH" "LM" "LE" "LS" "SL" "LO" "PM"
+    ## [71] "PK" "XX"
+
+We will only take into account observations associated with one of the
+50 official U.S. federal states. Every other observation will be
+dropped.
+
+    dim(storms_df)
+
+    ## [1] 897797     37
+
+    storms_df <- filter(storms_df, STATE %in% state.abb)
+
+    dim(storms_df)
+
+    ## [1] 878926     37
+
 ### Derive final version of processed dataset
 
-Besides **EVTYPE** the following other variables in the raw dataset are
-of interest for our latter analysis:
+Besides **EVTYPE** and **STATE** the following other variables in the
+raw dataset are of interest for our latter analysis:
 
 -   **BGN\_DATE**: Date the storm event began
 -   **FATALATIES**: Number of directly killed
 -   **INJURIES**: Number directly killed
 
-We will reduce our final processed dataset to those 4 variables with a
+We will reduce our final processed dataset to those 5 variables with a
 slight transformation of the **BGN\_DATE** column to represent the year
 the storm event occured instead of the date.
 
-    storms_df <- select(storms_df, BGN_DATE, EVTYPE, FATALITIES, INJURIES) %>%
+    storms_df <- select(storms_df, BGN_DATE, STATE, EVTYPE, FATALITIES, INJURIES) %>%
       mutate(
         year = year(mdy_hms(BGN_DATE))
         ) %>%
@@ -1346,7 +1385,8 @@ Our final tidy dataset looks as follows:
 
     str(storms_df)
 
-    ## 'data.frame':    897797 obs. of  4 variables:
+    ## 'data.frame':    878926 obs. of  5 variables:
+    ##  $ state     : chr  "AL" "AL" "AL" "AL" ...
     ##  $ evtype    : chr  "tornado" "tornado" "tornado" "tornado" ...
     ##  $ fatalities: num  0 0 0 0 0 0 0 0 1 0 ...
     ##  $ injuries  : num  15 0 2 2 2 6 1 0 14 0 ...
@@ -1406,13 +1446,15 @@ type:
         fatalities = sum(fatalities)
         )
 
-    ggplot(inj_fat_by_evtype_df, aes(evtype, injuries)) + 
+    inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(injuries))
+
+    ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, injuries), injuries)) + 
       geom_bar(stat='identity', fill = 'steelblue') +
       xlab('Storm event types') +
       ylab('Number of people injured') +
-      ggtitle('Number of injuries by storm event type') +
-      theme_bw() + 
-      theme(axis.text.x = element_text(angle = -90, hjust= 0, vjust=0.1, size = 8))
+      ggtitle('Top 10 storm event types causing injuries') +
+      coord_flip() +
+      theme_bw()
 
 ![plot of chunk
 injuries\_barplot](./noaa_database_analysis_files/figure-markdown_strict/injuries_barplot.png)
@@ -1427,13 +1469,15 @@ lightning (5230).
 
 <figure>
 
-    ggplot(inj_fat_by_evtype_df, aes(evtype, fatalities)) + 
+    inj_fat_by_evtype_df <- arrange(inj_fat_by_evtype_df, desc(fatalities))
+
+    ggplot(inj_fat_by_evtype_df[1:10, ], aes(reorder(evtype, fatalities), fatalities)) + 
       geom_bar(stat='identity', fill = 'steelblue') +
       xlab('Storm event types') +
       ylab('Number of people killed') +
-      ggtitle('Number of fatalities by storm event type') +
-      theme_bw() + 
-      theme(axis.text.x = element_text(angle = -90, hjust= 0, vjust=0.1, size = 8))
+      ggtitle('Top 10 storm event types causing fatalities') +
+      coord_flip() +
+      theme_bw() 
 
 ![plot of chunk
 fatalities\_barplot](./noaa_database_analysis_files/figure-markdown_strict/fatalities_barplot.png)
@@ -1510,14 +1554,94 @@ more than 10000 reported observations. A massive rise started in the mid
 </figcaption>
 </figure>
 
+In the last step, we show how injuries and fatalities are distributed
+among the different U.S. federal states.
 
-### Storm events in the United States having the greated economic consequences
+    # Create two data frames needed for plotting chloropleth maps
 
-**Note**: Based on time constraints on my side I was not able to answer
-the second question of the assignment.
+    states <- map_data('state')
 
-Additional Info
----------------
+    # (1) Group storm data by state
+    # (2) Calculate sum of fatalities and injuries for each subgroup
+    # (3) Map state abbreviations to full names
+    storms_by_state <- group_by(storms_df, state) %>%
+      summarize(
+        injuries = sum(injuries),
+        fatalities = sum(fatalities)
+        ) %>%
+      mutate (
+        state = tolower(mapvalues(state, state.abb, state.name))
+        )
 
-The code which created this report can also be found on GitHub:
-<https://github.com/alex23lemm/RepData_PeerAssessment2>
+    # Create additional data frame for plotting the federal state labels later
+    state_name_pos <- as.data.frame(state.center)
+    state_name_pos <- cbind(state_name_pos, state.abb)
+    names(state_name_pos) <- c('long', 'lat', 'abb')
+    # Exclude Alaska and Hawaii
+    state_name_pos <- filter(state_name_pos, !abb %in% c('AK', 'HI'))
+
+    ggplot(storms_by_state, aes(map_id = state, fill = injuries)) +
+      geom_map(map = states, colour = 'grey', linestyle = 2) +
+      geom_text(aes(x = long, y = lat, label = abb, fill = NULL, map_id = NULL), 
+                state_name_pos,
+               size = 2) +
+      ggtitle('Distribution of injuries by storm events among U.S. federal states \n (1950 - 2011)') +
+      coord_map('polyconic') +
+      expand_limits(x = states$long, y = states$lat) +
+      
+      scale_fill_gradient(low="white", 
+                          high="#756bb1", 
+                          breaks=seq(0, max(storms_by_state$injuries), by = 2000)) +
+      theme(
+          axis.title = element_blank(),
+          axis.text = element_blank(),
+          panel.background = element_blank(),
+          panel.grid = element_blank(),
+          axis.ticks.length = unit(0, "cm"),
+          axis.ticks.margin = unit(0, "cm"),
+          panel.margin = unit(0, "lines"),
+          plot.margin = unit(c(0, 0, 0, 0), "lines"), 
+          complete = TRUE
+        ) 
+
+![plot of chunk
+inj\_chloropleth](./noaa_database_analysis_files/figure-markdown_strict/inj_chloropleth.png)
+<p>
+<b>Figure 7</b>: In general, more people in the south east / east got
+injured in storm events compared to the rest of the country. Most of the
+people got injured in Texas.
+</p>
+
+
+
+    ggplot(storms_by_state, aes(map_id = state, fill = fatalities)) +
+      geom_map(map = states, colour = 'grey', linestyle = 2) +
+      geom_text(aes(x = long, y = lat, label = abb, fill = NULL, map_id = NULL), 
+                state_name_pos,
+                size = 2) +
+      ggtitle('Distribution of fatalities by storm events among U.S. federal states \n (1950 - 2011)') +
+      coord_map('polyconic') +
+      expand_limits(x = states$long, y = states$lat) +
+      
+      scale_fill_gradient(low="white", 
+                          high="#756bb1", 
+                          breaks=seq(0, max(storms_by_state$injuries), by = 200)) +
+      theme(
+          axis.title = element_blank(),
+          axis.text = element_blank(),
+          panel.background = element_blank(),
+          panel.grid = element_blank(),
+          axis.ticks.length = unit(0, "cm"),
+          axis.ticks.margin = unit(0, "cm"),
+          panel.margin = unit(0, "lines"),
+          plot.margin = unit(c(0, 0, 0, 0), "lines"), 
+          complete = TRUE
+        ) 
+
+![plot of chunk
+fat\_chloropleth](./noaa_database_analysis_files/figure-markdown_strict/fat_chloropleth.png)
+<p>
+<b>Figure 8</b>: In general, more people in the east were killed during
+storm events compared to the rest of the country. Most of the people
+were killed in Texas and Illinois.
+</p>
