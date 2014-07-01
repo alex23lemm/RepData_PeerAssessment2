@@ -72,18 +72,20 @@ An examination of the data reveals that the reason for that huge difference in e
 
 For instance, you can find more than 80 variations for the official event type term _Thunderstorm Wind_:
 
-<div>
-```{r results='asis'}
+```{r }
 
 tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
   summarize(
     number_of_obs = n()
     ) %>% 
   arrange(EVTYPE)
+```
+
+<div>
+```{r results='asis', echo=FALSE}
 
 print(xtable(tstm_subset_df[743:823, ], 
              caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE, html.table.attributes = '')
-
 
 ```
 </div>
@@ -148,7 +150,7 @@ storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 ```
 
 <div>
-```{r results='asis'}
+```{r results='asis', echo=FALSE}
 
 print(xtable(storms_by_evtype_df[1:47, ], 
              caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
@@ -199,7 +201,7 @@ storms_by_evtype_df <- storms_by_evtype_df[-1, ]
 We decide to include the  first 69 ordered event types which account for 99,5 % of the total amount of observations as you can see in the `cumb_contrib_in_percent` column below.
 
 <div>
-```{r results='asis'}
+```{r results='asis', echo=FALSE}
 
 print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html', 
       include.rownames = FALSE)

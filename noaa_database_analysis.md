@@ -90,19 +90,15 @@ same kind of events in the raw data.
 For instance, you can find more than 80 variations for the official
 event type term *Thunderstorm Wind*:
 
-<div>
-
     tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
       summarize(
         number_of_obs = n()
         ) %>% 
       arrange(EVTYPE)
 
-    print(xtable(tstm_subset_df[743:823, ], 
-                 caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE, html.table.attributes = '')
-
+<div>
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Tue Jul 01 17:18:41 2014 -->
+<!-- Tue Jul 01 17:23:29 2014 -->
 <TABLE >
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
@@ -589,12 +585,8 @@ simple quantitative approach consisting of 5 steps:
     storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 
 <div>
-
-    print(xtable(storms_by_evtype_df[1:47, ], 
-                 caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
-
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Tue Jul 01 17:18:42 2014 -->
+<!-- Tue Jul 01 17:23:30 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1177,12 +1169,8 @@ We decide to include the first 69 ordered event types which account for
 `cumb_contrib_in_percent` column below.
 
 <div>
-
-    print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html', 
-          include.rownames = FALSE)
-
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Tue Jul 01 17:18:43 2014 -->
+<!-- Tue Jul 01 17:23:30 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
