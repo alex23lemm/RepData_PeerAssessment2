@@ -90,6 +90,8 @@ same kind of events in the raw data.
 For instance, you can find more than 80 variations for the official
 event type term *Thunderstorm Wind*:
 
+<div>
+
     tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
       summarize(
         number_of_obs = n()
@@ -97,11 +99,11 @@ event type term *Thunderstorm Wind*:
       arrange(EVTYPE)
 
     print(xtable(tstm_subset_df[743:823, ], 
-                 caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
+                 caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE, html.table.attributes = '')
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon Jun 30 00:44:41 2014 -->
-<TABLE border=1>
+<!-- Tue Jul 01 17:18:41 2014 -->
+<TABLE >
 <CAPTION ALIGN="bottom"> 
 <b>Table 1:</b> Examples of event type name modifications
 </CAPTION>
@@ -516,7 +518,7 @@ THUNERSTORM WINDS
 1
 </TD> </TR>
    </TABLE>
-
+</div>
 
 This is caused by:
 
@@ -586,11 +588,13 @@ simple quantitative approach consisting of 5 steps:
 
     storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 
+<div>
+
     print(xtable(storms_by_evtype_df[1:47, ], 
                  caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon Jun 30 00:44:42 2014 -->
+<!-- Tue Jul 01 17:18:42 2014 -->
 <TABLE border=1>
 <CAPTION ALIGN="bottom"> 
 <b>Table 2:</b> The 47 event types with the highest observation
@@ -1125,7 +1129,7 @@ avalanche
 47
 </TD> </TR>
    </TABLE>
-
+</div>
 
 
 As the table above shows, the first 47 event types already make up for
@@ -1172,11 +1176,13 @@ We decide to include the first 69 ordered event types which account for
 99,5 % of the total amount of observations as you can see in the
 `cumb_contrib_in_percent` column below.
 
+<div>
+
     print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html', 
           include.rownames = FALSE)
 
 <!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
-<!-- Mon Jun 30 00:44:43 2014 -->
+<!-- Tue Jul 01 17:18:43 2014 -->
 <TABLE border=1>
 <TR> <TH> 
 EVTYPE
@@ -1201,7 +1207,7 @@ moderate snowfall
 69.0000000
 </TD> </TR>
    </TABLE>
-
+</div>
 
 This is equivalent to include all event types which contribute more than
 100 observations to the dataset.

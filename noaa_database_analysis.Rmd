@@ -72,6 +72,7 @@ An examination of the data reveals that the reason for that huge difference in e
 
 For instance, you can find more than 80 variations for the official event type term _Thunderstorm Wind_:
 
+<div>
 ```{r results='asis'}
 
 tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
@@ -81,11 +82,11 @@ tstm_subset_df <- group_by(storms_df, EVTYPE) %>%
   arrange(EVTYPE)
 
 print(xtable(tstm_subset_df[743:823, ], 
-             caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE)
+             caption = "<b>Table 1:</b> Examples of event type name modifications"), type = 'html', include.rownames = FALSE, html.table.attributes = '')
 
 
 ```
-
+</div>
 
 This is caused by:  
 
@@ -146,13 +147,14 @@ storms_by_evtype_df$rank <-  1:nrow(storms_by_evtype_df)
 
 ```
 
+<div>
 ```{r results='asis'}
 
 print(xtable(storms_by_evtype_df[1:47, ], 
              caption = "<b>Table 2:</b> The 47 event types with the highest observation percentage contribution", digits = 7), type = 'html', include.rownames = FALSE)
 
 ```
-
+</div>
 
 
 As the table above shows, the first 47 event types already make up for 99 % of the total amount of observations. 
@@ -160,6 +162,7 @@ As the table above shows, the first 47 event types already make up for 99 % of t
 This can be shown even better when plotting the grouped data.
 
 ```{r}
+
 # Add dummy row at position (0,0) for plotting purposes
 storms_by_evtype_df <- rbind(storms_by_evtype_df, c(0, 0, 0, 0, 0)) %>%
   arrange(cumb_contrib_in_percent)
@@ -184,6 +187,7 @@ ggplot(storms_by_evtype_df, aes(rank, cumb_contrib_in_percent)) +
 <p><b>Figure 1: Percentage contribution of each event type to total amount of observations.</b> The x-axis represents all remaining `r nrow(storms_by_evtype_df)` event types (after the first pre-processing step) in the dataset expressed in numbers and ordered by their descending percentage contribution. The first 69 event types (vertical line) account for 99,5 % of the total amount of obervations. Especially, the last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ < 6])` event types only contribute a tiny fraction to the overall percentage completeness of the observations, due to the fact that less than 6 observations belong to each of those event types. The last `r length(storms_by_evtype_df$numb_of_occ[storms_by_evtype_df$numb_of_occ == 1])` event types even only contribute a single observation.</p>
 
 ```{r}
+
 # Remove dummy row
 storms_by_evtype_df <- storms_by_evtype_df[-1, ]
 
@@ -194,13 +198,14 @@ storms_by_evtype_df <- storms_by_evtype_df[-1, ]
 
 We decide to include the  first 69 ordered event types which account for 99,5 % of the total amount of observations as you can see in the `cumb_contrib_in_percent` column below.
 
+<div>
 ```{r results='asis'}
 
 print(xtable(filter(storms_by_evtype_df, rank == 69), digits = 7), type = 'html', 
       include.rownames = FALSE)
 
 ```
-
+</div>
 
 This is equivalent to include all event types which contribute more than 100 observations to the dataset.
 
